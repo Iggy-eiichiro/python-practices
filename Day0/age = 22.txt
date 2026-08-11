@@ -1,0 +1,5 @@
+age = 22
+print(type(age))
+
+output
+<class 'int'>

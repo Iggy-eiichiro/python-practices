@@ -1,0 +1,7 @@
+me = {"name":"Eiichiro","age":"22"}
+for key, value in me.items():
+    print(key, value)
+
+output
+name Eiichiro
+age 22 

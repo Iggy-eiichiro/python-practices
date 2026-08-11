@@ -1,0 +1,16 @@
+def palindrome(word):
+    return word==word[::-1]
+
+if __name__ == "__main__":
+    word = input("Enter a word: ")
+    if palindrome(word):
+        print(f"{word} is a palindrome.")
+    else:
+        print(f"{word} is not a palindrome.")
+
+output
+Enter a word: level# levelは自分で入力
+level is a palindrome.
+
+直接実行されなかったらinputの部分だけ実行されないらしい
+

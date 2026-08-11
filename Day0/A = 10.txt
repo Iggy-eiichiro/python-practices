@@ -1,0 +1,12 @@
+A = 10
+B = 3
+print(A + B)
+print(A - B)
+print(A * B)
+print(A / B)
+
+output
+13
+7
+30
+3.3333333333333335

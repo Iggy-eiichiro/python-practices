@@ -1,0 +1,5 @@
+integer= 41
+print(integer+1)
+
+output
+42
