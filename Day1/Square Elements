@@ -1,7 +1,0 @@
-numbers = [1, 2, 3]
-squared = []
-
-for number in numbers:
-    squared.append(number ** 2)
-
-print(squared)
