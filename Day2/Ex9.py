@@ -20,5 +20,5 @@ a = MyClass()
 b = MyClass()
 
 
-
-print(a is b)
+if a is b:# : take process behind the : 
+    print("Both variables point to the same memory address.")
