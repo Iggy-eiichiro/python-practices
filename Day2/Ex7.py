@@ -24,10 +24,16 @@ def rate_limit(n, seconds):
     return decorator
 
 
-@rate_limit(3, 1)
+@rate_limit(2, 1)
 def hello():
     print("Hello")
      
+hello()
+hello()
+hello()
+hello()
+hello()
+hello()
 hello()
 hello()
 hello()
