@@ -3,8 +3,8 @@ def validate_int(func): # the function takes another function
         if not isinstance(x,int):# isinstance() is a function that returns True or False
             raise TypeError("Expected int")
 
-        return func(x)
-    return wrapper
+        return func(x)# Return, which mean you have got answer.
+    return wrapper# Return, which mean you have got answer.
 
 @ validate_int
 def double(x):
