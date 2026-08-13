@@ -7,6 +7,7 @@ def flatten_list(nested_list):
             flatten_list(item)
         else:
             flattened.append(item)
+            
 flatten_list(numbers)
 
 print(flattened)

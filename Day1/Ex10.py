@@ -1,4 +1,4 @@
-nums=[2,7,11]
+nums=[7,11,2]
 target=9
 
 for i in range(len(nums)):# i got the index of the first number
