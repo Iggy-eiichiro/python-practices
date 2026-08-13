@@ -2,7 +2,7 @@ words = ['eat','tea','tan','nat']
 anagrams = {}
 
 for word in words:
-    sorted_word = ''.join(sorted(word))# sort the letters of the word and join them back together to form a new string.'' is used to join the letters together without any spaces.      
+    sorted_word = ''.join(sorted(word))# sort the letters of the word and join them back together to form a new string.'' is used for join the letters together without any spaces.      
     if sorted_word in anagrams:
         anagrams[sorted_word].append(word)
     else:
