@@ -1,7 +1,7 @@
 numbers = [[1, 2], [3, 4], [5]]
 flattened = []
 for group in numbers:
-    for subulist in numbers:
-        for number in subulist:
-            flattened.append(number)
-    print(flattened)
+    for number in group:
+        flattened.append(number)
+
+print(flattened)
