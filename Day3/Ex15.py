@@ -9,9 +9,9 @@ class PaymentProvider(ABC):
 
 
 class MyPayment(PaymentProvider):
-
-    def process(self):
-        print("Payment processed")
+     pass# it is going to be TypeError when instantiate(make object)
+    # def process(self):
+    #     print("Payment processed")
 
 
 payment = MyPayment()
