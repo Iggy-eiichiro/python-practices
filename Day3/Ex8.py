@@ -3,7 +3,7 @@ class User:
         self.name = name
         self.user_id = user_id
 
-    def __str__(self):
+    def __str__(self):# __str__ is the display method of objects that can be summarized in one place
              return f"User:{self.name}(ID:{self.user_id})"
 
 
