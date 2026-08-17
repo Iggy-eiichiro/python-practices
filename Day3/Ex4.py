@@ -15,10 +15,10 @@ class Person:
 
 age = int(input("please give me your age:"))
 
-person = age
+person = Person(age)
 
-age = int(input("please give me your age:"))
+# age = int(input("please give me your age:"))
 
-person.age = age
+# person.age = age
 
-print(f"age:",person.age)
+print(f"age:{person.age}")
