@@ -1,6 +1,6 @@
 class Animal:
     # to put together what we have in common
-    # class Animal is Base class, even without Base class,it's possible to make code but it is better with Base class
+    # class Animal is Base class. even without Base class it's possible to make code but, it is better with Base class
     def speak(self):
         print("Animal sound")
 
@@ -9,7 +9,7 @@ class Animal:
         print("Eating")
 
 
-class Dog(Animal):
+class Dog(Animal):# if it has different code with Base class, it can complete it by itself
     def speak(self):
         print("Woof")
 
