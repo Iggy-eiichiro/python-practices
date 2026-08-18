@@ -30,7 +30,7 @@ def load_config(filename):
 
 config = load_config("config.json")
 
-if config is not None:
+if config is not None:# return dictionary = displayed config
     print(config)
 
 # logging.error. specify and record the error message yourself
