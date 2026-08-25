@@ -1,36 +1,44 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
 
 from Database import get_db
-from models import Post
+from models import User
+from schemas import UserLogin
+from auth import create_access_token
+
 
 app = FastAPI()
 
 
-@app.get("/posts")
-def search_and_sort_posts(
-    search: str,
-    sort: str = "created_at",
+@app.post("/login")
+def login(
+    user_data: UserLogin,
     db: Session = Depends(get_db)
 ):
 
-    # Start the query
-    query = db.query(Post)
+    # Find the user
+    user = db.query(User).filter(
+        User.name == user_data.name
+    ).first()
 
-    # Search title OR content
-    query = query.filter(
-        or_(# title or content
-            Post.title.contains(search),
-            Post.content.contains(search)
+    # User does not exist
+    if user is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Incorrect name or password"
         )
-    )
 
-    # Sort by created_at
-    if sort == "created_at":
-        query = query.order_by(Post.created_at)
+    # Check the password
+    if user.password != user_data.password:
+        raise HTTPException(
+            status_code=401,
+            detail="Incorrect name or password"
+        )
 
-    # Get the results
-    posts = query.all()
+    # Create JWT
+    access_token = create_access_token(user.id)
 
-    return posts
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
