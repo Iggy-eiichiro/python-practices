@@ -1,179 +1,33 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
+# Depends,  manage FastAPI dependencies
+#HTTPException, Returns an HTTP error
+from sqlalchemy.orm import Session
 
-from pydantic import BaseModel
-from Database import SessionLocal
+from Database import Base, engine, get_db
+from models import User, Post
 
-from models import User,Post
-
+# Create database tables
+Base.metadata.create_all(bind=engine)
+# Base. base of table
+# metadata. summary of data base information
+# create_all. create table with information
 app = FastAPI()
-# Post data received from the client
-class PostCreate(BaseModel):
-    title: str
-    content: str
 
-
-# User update data
-class UserUpdate(BaseModel):
-    name: str
-    email: str
-
-# READ
-
-@app.get("/users")
-
-def get_users():
-
-    db = SessionLocal()
-
-    users = db.query(User).all()
-
-    db.close()
-
-    return users
-
-# CREATE
-
-@app.post("/users")
-
-def create_user( name: str, email: str):
-
-    db = SessionLocal()
-
-    # 同じ名前・同じメールアドレスがあるか確認
-
-    existing_user = db.query(User).filter(
-
-        User.name == name,
-
-        User.email == email
-
-    ).first()
-
-    # すでに存在する場合
-
-    if existing_user:
-
-        db.close()
-
-        return {"message": "This user already exists"}
-
-    # 存在しない場合は新しく登録
-
-    user = User(
-
-        name=name,
-
-        email=email
-
-    )
-
-    db.add(user)
-
-    db.commit()
-
-    db.refresh(user)
-
-    db.close()
-
-    return user
-
-# UPDATE
-@app.put("/users/{user_id}")
-
-
-
-@app.put("/users/{user_id}")
-
-def update_user(user_id: int, user_data: UserUpdate):
-
-    db = SessionLocal()
-
-    # 指定されたIDのUserを探す
-
+# Get posts belonging to a user
+@app.get("/users/{user_id}/posts")
+def get_user_posts(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    # Find the user
     user = db.query(User).filter(User.id == user_id).first()
 
+    # If the user does not exist
     if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
 
-        db.close()
-
-        return {"message": "User not found"}
-
-    # Userのデータを変更
-
-    user.name = user_data.name
-
-    user.email = user_data.email
-
-    # DBに保存
-
-    db.commit()
-
-    db.refresh(user)
-
-    db.close()
-
-    return user
-# @app.put("/users/{user_id}")
-
-# def update_user(user_id: int, name: str, email: str):
-
-#     db = SessionLocal()
-
-#     user = db.query(User).filter(User.id == user_id).first()
-
-#     user.name = name
-
-#     user.email = email
-
-#     db.commit()
-
-#     db.refresh(user)
-
-#     db.close()
-
-#     return user
-
-# DELETE
-
-@app.delete("/users/{user_id}")
-
-def delete_user(user_id: int):
-
-    db = SessionLocal()
-
-    user = db.query(User).filter(User.id == user_id).first()
-
-    db.delete(user)
-
-    db.commit()
-
-    db.close()
-
-    return {"message": "User deleted"}
-
-@app.post("/users/{user_id}/posts")
-def create_post(user_id: int, post_data: PostCreate):
-
-    db = SessionLocal()
-
-    # Find the User
-    user = db.query(User).filter(User.id == user_id).first()
-
-    if user is None:
-        db.close()
-        return {"message": "User not found"}
-
-    # Create Post
-    post = Post(
-        title=post_data.title,
-        content=post_data.content,
-        user_id=user_id
-    )
-
-    db.add(post)
-    db.commit()
-    db.refresh(post)
-
-    db.close()
-
-    return post
+    # Get all posts belonging to this user
+    return user.posts

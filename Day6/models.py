@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 
 from Database import Base
 
-
+# User table
 class User(Base):
 
     __tablename__ = "users"
@@ -15,7 +15,7 @@ class User(Base):
     # One User can have many Posts
     posts = relationship("Post", back_populates="user")
 
-
+# Post table
 class Post(Base):
 
     __tablename__ = "posts"
@@ -24,8 +24,8 @@ class Post(Base):
     title = Column(String)
     content = Column(String)
 
-    # Connect Post to User
+    # Store the ID of the User who owns this Post
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    # One Post belongs to one User
+    # Connect Post to User
     user = relationship("User", back_populates="posts")
