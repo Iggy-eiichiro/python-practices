@@ -17,11 +17,19 @@ SessionLocal = sessionmaker(#make session
 # Base class for database models
 Base = declarative_base()
 
-# Create a database session for each request
+
+# Create and manage a database session
 def get_db():
+
+    # Create a new Session
     db = SessionLocal()
 
     try:
-        yield db #give db session to FstAPI
+        # Give the Session to the endpoint
+        yield db
+
     finally:
-        db.close()#close db session
+        # Close the Session after the request
+        db.close()
+
+
