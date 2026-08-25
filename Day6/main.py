@@ -3,13 +3,19 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from Database import SessionLocal
 
-from models import User
+from models import User,Post
 
 app = FastAPI()
+# Post data received from the client
+class PostCreate(BaseModel):
+    title: str
+    content: str
+
+
+# User update data
 class UserUpdate(BaseModel):
     name: str
-    email:str
-
+    email: str
 
 # READ
 
@@ -144,3 +150,30 @@ def delete_user(user_id: int):
     db.close()
 
     return {"message": "User deleted"}
+
+@app.post("/users/{user_id}/posts")
+def create_post(user_id: int, post_data: PostCreate):
+
+    db = SessionLocal()
+
+    # Find the User
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if user is None:
+        db.close()
+        return {"message": "User not found"}
+
+    # Create Post
+    post = Post(
+        title=post_data.title,
+        content=post_data.content,
+        user_id=user_id
+    )
+
+    db.add(post)
+    db.commit()
+    db.refresh(post)
+
+    db.close()
+
+    return post
