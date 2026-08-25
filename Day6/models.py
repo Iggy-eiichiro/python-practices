@@ -1,10 +1,10 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 from Database import Base
 
 
-# User table
 class User(Base):
 
     __tablename__ = "users"
@@ -13,11 +13,9 @@ class User(Base):
     name = Column(String)
     email = Column(String)
 
-    # One User can have many Posts
     posts = relationship("Post", back_populates="user")
 
 
-# Post table
 class Post(Base):
 
     __tablename__ = "posts"
@@ -26,8 +24,9 @@ class Post(Base):
     title = Column(String)
     content = Column(String)
 
-    # Connect Post to User
+    # Store the date and time when the post was created
+    created_at = Column(DateTime, default=datetime.utcnow)
+
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    # Connect Post and User
     user = relationship("User", back_populates="posts")

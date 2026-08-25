@@ -1,31 +1,36 @@
-from fastapi import FastAPI, Depends, Query
+from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 from Database import get_db
-from models import User, Post
+from models import Post
 
 app = FastAPI()
 
 
 @app.get("/posts")
-def get_posts(
-    page: int = 1,
-    limit: int = Query(10, le=100),
+def search_and_sort_posts(
+    search: str,
+    sort: str = "created_at",
     db: Session = Depends(get_db)
 ):
 
-    # Calculate how many posts to skip
-    skip = (page - 1) * limit
+    # Start the query
+    query = db.query(Post)
 
-    # Get total number of posts
-    total = db.query(Post).count()
+    # Search title OR content
+    query = query.filter(
+        or_(# title or content
+            Post.title.contains(search),
+            Post.content.contains(search)
+        )
+    )
 
-    # Get posts for this page
-    posts = db.query(Post).offset(skip).limit(limit).all()
+    # Sort by created_at
+    if sort == "created_at":
+        query = query.order_by(Post.created_at)
 
-    return {
-        "page": page,
-        "limit": limit,
-        "total": total,
-        "items": posts
-    }
+    # Get the results
+    posts = query.all()
+
+    return posts
