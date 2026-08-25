@@ -5,23 +5,27 @@ from Database import get_db
 from models import User, Post
 
 app = FastAPI()
+
+
 @app.get("/posts")
-def search_posts(
-    search: str,
+def get_posts(
+    page: int = 1,
+    limit: int = Query(10, le=100),
     db: Session = Depends(get_db)
 ):
 
-    posts = db.query(Post).filter(
-        Post.content.contains(search)
-    ).all()
+    # Calculate how many posts to skip
+    skip = (page - 1) * limit
 
-    return [
-        {
-            "id": post.id,
-            "title": post.title,
-            "content": post.content,
-            "user_id": post.user_id,
-            "user_name": post.user.name
-        }
-        for post in posts
-    ]
+    # Get total number of posts
+    total = db.query(Post).count()
+
+    # Get posts for this page
+    posts = db.query(Post).offset(skip).limit(limit).all()
+
+    return {
+        "page": page,
+        "limit": limit,
+        "total": total,
+        "items": posts
+    }
