@@ -12,6 +12,7 @@ class User(Base):
     name = Column(String)
     email = Column(String)
     password = Column(String)
+    role = Column(String, default="User")
 
     posts = relationship("Post", back_populates="user")
 
